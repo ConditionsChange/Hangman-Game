@@ -1,6 +1,10 @@
+window.onload = function() {
+    document.getElementById("loop").play();
+}
+
 //initialize variables
 var guesses_left;  //Number of guesses that the player has left to correctly display the word
-var word_bank =["asteroid","astronaut","astronomer","astronomy","big bang theory"]; //an array of words that are used to play the game
+var word_bank =["asteroid","astronaut","big bang theory","alien","aurora borealis","black hole","comet","cosmology","dwarf planet","eclipse","extraterrestrial","horizon","galaxy","gravity","jupiter","lunar","mars","meteor","milky way","moon", "nasa","nebula","nova","orbit","penumbra","planet","pulsar","quasar","rocket","satellite","shuttle","sun","supernova","solar system","terraform","uranus","venus","mercury","earth","neptune","saturn","cosmos","radiation","space station","universe","the big dipper","star","constellation","umbra","zenith","aphelion","apogee","caldera","cosmic ray","crater","dark matter","gamma ray","heliosphere","parallax","red giant","solar flare","solstice","white dwarf"]; //an array of words that are used to play the game
 var guessed_letters; //an array of previously guessed letters
 var target_word
 var target_word_array
@@ -10,6 +14,8 @@ var losses = 0;
 var blank_spaces // the number of blank spaces to show
 var blank_array
 var gamestate = "page load";
+var spaceship_opacity
+var spaceship_grayscale
 var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 
 
@@ -19,6 +25,8 @@ function initialize_game(){
 guesses_left =6;
 guessed_letters = [];
 blank_spaces =0;
+spaceship_opacity = 1;
+spaceship_grayscale=100;
 //select a new target word
 ran_num = Math.floor(Math.random() * (word_bank.length)) + 0
 target_word = word_bank[ran_num]	//assign a letter from the word_bank to the target word
@@ -41,6 +49,8 @@ document.getElementById("target_word").innerHTML = blank_array.join(""); //chang
 document.getElementById("status").innerHTML = "";	
 document.getElementById("last_letter").innerHTML = "";
 document.getElementById("guessed_letters").innerHTML = "";//change guesses left to 6
+document.getElementById("rocketpic").style.opacity = "1";
+document.getElementById("rocketpic").style.filter = "grayscale(0%)";
 }
 
 
@@ -76,27 +86,31 @@ document.onkeyup = function keyPress(event){
 					else{ ///if the guessed letter is not in the target word
 						guessed_letters.push(chosen_letter);
 						guesses_left--
+						if (guesses_left > 0){
+							spaceship_opacity -= .09;
+						}
 						//update graphics
+						document.getElementById("rocketpic").style.opacity = spaceship_opacity;
 						document.getElementById("guesses_left").innerHTML = guesses_left;
 						document.getElementById("last_letter").innerHTML = event.key;
 						document.getElementById("guessed_letters").innerHTML = guessed_letters;							
 					}
 
 					//check win-loss conditions
-					if (guesses_left <= 0){
+					if (guesses_left <= 0){ //you lose
 						losses++;
 						gamestate = "results screen";
 						//update graphics
+						document.getElementById("rocketpic").style.filter = "grayscale(100%)";
 						document.getElementById("losses").innerHTML = losses;
-						document.getElementById("status").innerHTML = 'You Lose! The word was "' + target_word + '". Press any key to play again';
+						document.getElementById("status").innerHTML = 'You Lose! The word was "' + target_word + '". Press any key to play again.';
 					}
-					else if (blank_spaces === 0){
+					else if (blank_spaces === 0){//you win
 						wins++;
 						gamestate = "results screen";
 						//update graphics
 						document.getElementById("wins").innerHTML = wins;
-						document.getElementById("status").innerHTML = "You Win! The word was " +target_word+ "Press any key to play again";				
-						//show you win in status bar press anything to play again			
+						document.getElementById("status").innerHTML = "You Win! Press any key to play again."		
 					}
 					else{
 					}
