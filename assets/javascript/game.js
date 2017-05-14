@@ -1,7 +1,14 @@
 window.onload = function() {
-    document.getElementById("loop").play();
+	//change volume of sfx
+    // document.getElementById("loop").volume = .5; 
+    // document.getElementById("correct").volume = .5;       
+    // document.getElementById("you_win").volume = .5;   
+    // document.getElementById("you_lose").volume = .5;   
+    // document.getElementById("error").volume = .5;   
+    // document.getElementById("start_game").volume = 1;   
+    // document.getElementById("glass_break").volume = .5;   
+    document.getElementById("loop").play();       
 }
-
 //initialize variables
 var guesses_left;  //Number of guesses that the player has left to correctly display the word
 var word_bank =["asteroid","astronaut","big bang theory","alien","aurora borealis","black hole","comet","cosmology","dwarf planet","eclipse","extraterrestrial","horizon","galaxy","gravity","jupiter","lunar","mars","meteor","milky way","moon", "nasa","nebula","nova","orbit","penumbra","planet","pulsar","quasar","rocket","satellite","shuttle","sun","supernova","solar system","terraform","uranus","venus","mercury","earth","neptune","saturn","cosmos","radiation","space station","universe","the big dipper","star","constellation","umbra","zenith","aphelion","apogee","caldera","cosmic ray","crater","dark matter","gamma ray","heliosphere","parallax","red giant","solar flare","solstice","white dwarf"]; //an array of words that are used to play the game
@@ -51,6 +58,11 @@ document.getElementById("last_letter").innerHTML = "";
 document.getElementById("guessed_letters").innerHTML = "";//change guesses left to 6
 document.getElementById("rocketpic").style.opacity = "1";
 document.getElementById("rocketpic").style.filter = "grayscale(0%)";
+//stop music
+document.getElementById("you_lose").pause();
+document.getElementById("you_lose").currentTime = 0;
+//play music
+document.getElementById("start_game").play();
 }
 
 
@@ -82,41 +94,57 @@ document.onkeyup = function keyPress(event){
 						document.getElementById("target_word").innerHTML = blank_array.join("");
 						document.getElementById("last_letter").innerHTML = event.key;
 						document.getElementById("guessed_letters").innerHTML = guessed_letters;	
+						//play music
+						document.getElementById("correct").pause();
+						document.getElementById("correct").currentTime = 0;
+    					document.getElementById("correct").play();
 					}
 					else{ ///if the guessed letter is not in the target word
 						guessed_letters.push(chosen_letter);
 						guesses_left--
 						if (guesses_left > 0){
-							spaceship_opacity -= .09;
+							spaceship_opacity -= .12;
 						}
 						//update graphics
 						document.getElementById("rocketpic").style.opacity = spaceship_opacity;
 						document.getElementById("guesses_left").innerHTML = guesses_left;
 						document.getElementById("last_letter").innerHTML = event.key;
-						document.getElementById("guessed_letters").innerHTML = guessed_letters;							
+						document.getElementById("guessed_letters").innerHTML = guessed_letters;		
+						//play music
+						document.getElementById("glass_break").pause();
+						document.getElementById("glass_break").currentTime = 0;
+    					document.getElementById("glass_break").play();					
 					}
 
 					//check win-loss conditions
-					if (guesses_left <= 0){ //you lose
+					if (blank_spaces === 0){//you win
+						wins++;
+						gamestate = "results screen";
+						//update graphics
+						document.getElementById("wins").innerHTML = wins;
+						document.getElementById("status").innerHTML = "You Win! Press any key to play again."
+						// play music
+    					document.getElementById("you_win").play();								
+					}
+					else if (guesses_left <= 0){ //you lose
 						losses++;
 						gamestate = "results screen";
 						//update graphics
 						document.getElementById("rocketpic").style.filter = "grayscale(100%)";
 						document.getElementById("losses").innerHTML = losses;
 						document.getElementById("status").innerHTML = 'You Lose! The word was "' + target_word + '". Press any key to play again.';
-					}
-					else if (blank_spaces === 0){//you win
-						wins++;
-						gamestate = "results screen";
-						//update graphics
-						document.getElementById("wins").innerHTML = wins;
-						document.getElementById("status").innerHTML = "You Win! Press any key to play again."		
+						//play music
+						document.getElementById("you_lose").play();
 					}
 					else{
 					}
 		}
 		else{
 			console.log("Letter already previously chosen or key pressed was not a letter")
+			//play music
+			document.getElementById("error").pause();
+			document.getElementById("error").currentTime = 0;
+    		document.getElementById("error").play();
 		}
 		
 	}

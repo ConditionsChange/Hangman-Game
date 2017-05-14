@@ -7,6 +7,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Luckiest+Guy|Orbitron:700" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="icon" href="assets/images/favcon.png">
 </head>
 <body>
 	<div class="wrapper">
@@ -32,15 +33,22 @@
 
 		<div class="third-row-box">
 			<div class="third-row-box-1">
-				Last Guess<br>
+				<p class="lg">Last Guess</p>
 				<span id="last_letter"></span>
 			</div>
 			<div class="third-row-box-2">
-				Guessed Letters: <span id="guessed_letters"></span></p>
+				<p class="lg">Guessed Letters:</p><br>
+				<span id="guessed_letters"></span></p>
 			</div> 
 		</div>
 	</div>
-	<audio id="loop" src="assets/music/Straight.mp3" loop="loop"></audio>
-
+	<!-- include audio files -->
+	<audio id="loop" src="assets/music/straight.mp3" loop="loop"></audio>
+	<audio id="correct" src="assets/music/correct.mp3"></audio>	
+	<audio id="you_win" src="assets/music/you_win.mp3"></audio>	
+	<audio id="you_lose" src="assets/music/you_lose.mp3" loop="loop"></audio>	
+	<audio id="error" src="assets/music/error.mp3"></audio>	
+	<audio id="start_game" src="assets/music/start_game.mp3"></audio>	
+	<audio id="glass_break" src="assets/music/glass_break.mp3"></audio>					
 </body>
 </html>
