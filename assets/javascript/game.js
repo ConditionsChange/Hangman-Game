@@ -49,7 +49,7 @@ gamestate = "play game"; //change game state to play game
 document.getElementById("guesses_left").innerHTML = guesses_left;//change guesses left to 6
 document.getElementById("target_word").innerHTML = blank_array.join(""); //change the target words to blanks
 document.getElementById("status").innerHTML = "";	
-document.getElementById("last_letter").innerHTML = "";
+document.getElementById("last-letter").innerHTML = "";
 document.getElementById("guessed_letters").innerHTML = "";//change guesses left to 6
 document.getElementById("rocketpic").style.opacity = "1";
 document.getElementById("rocketpic").style.filter = "grayscale(0%)";
@@ -105,7 +105,7 @@ document.onkeyup = function keyPress(event){
 						//update graphics
 						document.getElementById("rocketpic").style.opacity = spaceship_opacity;
 						document.getElementById("guesses_left").innerHTML = guesses_left;
-						document.getElementById("last_letter").innerHTML = event.key;
+						document.getElementById("last-letter").innerHTML = event.key;
 						document.getElementById("guessed_letters").innerHTML = guessed_letters;		
 						//play sfx
 						document.getElementById("glass_break").pause();
@@ -119,7 +119,7 @@ document.onkeyup = function keyPress(event){
 						wins++;//increment the win counter
 						gamestate = "results screen";
 						//update graphics
-						document.getElementById("wins").innerHTML = wins;
+						document.getElementById("wins-counter").innerHTML = wins;
 						document.getElementById("status").innerHTML = "You Win! Press any key to play again.";
 						// play sfx
     					document.getElementById("you_win").play();								
@@ -130,7 +130,7 @@ document.onkeyup = function keyPress(event){
 						gamestate = "results screen";
 						//update graphics
 						document.getElementById("rocketpic").style.filter = "grayscale(100%)";
-						document.getElementById("losses").innerHTML = losses;
+						document.getElementById("losses-counter").innerHTML = losses;
 						document.getElementById("status").innerHTML = 'You Lose! The word was "' + target_word + '". Press any key to play again.';
 						//play sfx
 						document.getElementById("you_lose").play();
