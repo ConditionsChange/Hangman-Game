@@ -1,6 +1,31 @@
 window.onload = function() {
 	//play background music on load
-    document.getElementById("bgloop").play();       
+	document.getElementById("bgloop").play();      
+	
+};
+
+var playmusic = true;
+var sfx = document.getElementsByClassName("sfx")
+
+document.getElementById("volume").onclick = function() {
+
+	if (playmusic === true){ //make it false and mute the music
+		playmusic = false;
+		document.getElementById("volume").src="./assets/images/muted.png";
+		var sfx = document.getElementsByClassName("sfx")
+		for (var i=0; i < sfx.length ; i++){
+			sfx[i].muted = true
+		}	
+	}
+	else{ //make it true and mute the music
+		playmusic = true;
+		document.getElementById("volume").src="./assets/images/unmuted.png";
+		var sfx = document.getElementsByClassName("sfx")
+		for (var i=0; i < sfx.length ; i++){
+			sfx[i].muted = false
+		}		
+	}
+
 };
 
 //initialize variables

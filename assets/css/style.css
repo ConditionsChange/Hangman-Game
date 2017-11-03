@@ -55,6 +55,11 @@ h1{
 #volume{
 	widows: 100%;
 	height: 100%;
+	border-radius: 5px;
+}
+
+#volume:hover{
+	cursor: pointer;
 }
 
 /*-----------------Game Space Layer-------------------*/
