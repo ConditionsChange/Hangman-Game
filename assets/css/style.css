@@ -37,15 +37,25 @@ h1{
 }
 
 
-#guesses-left-title{
+#guesses-left{
 	color: #00FFFF ;
 }
 
 
 #wins-counter, #losses-counter{
 	color: #FFB6C1;
-} 
+}
 
+#volume-container{
+	margin: 11px 0;
+	width: 45px;
+	height: 45px;
+}
+
+#volume{
+	widows: 100%;
+	height: 100%;
+}
 
 /*-----------------Game Space Layer-------------------*/
 
@@ -76,7 +86,7 @@ h1{
 	justify-content: space-around;
 }
 
-#target_word{
+#target-word{
 	position: relative;
 	top: 20px;
 	width: 400px;
@@ -112,6 +122,7 @@ h1{
 	padding: 0;
 	width: 145px;
 	height: 125px;
+	border-radius: 15px;
 }
 
 .help-text{
@@ -121,8 +132,12 @@ h1{
 }
 
 #last-letter{
+	position: relative;
+	bottom: 9px;
 	text-align: center;
 	font-size:4em;
+	height: 80px;
+	width: 100%;
 }
 
 
@@ -130,21 +145,23 @@ h1{
 	display:flex;
 	flex-direction: column;
 	justify-content: space-around;
+	text-align:center;
 	border: 2px solid white;
 	margin: 0;
 	padding: 0;
 	width: 380px;
 	height:125px;
 	font-size: 1.2em;
-	text-align:center;
+	border-radius: 15px;
 }
 
 
-#guessed_letters{
+#guessed-letters{
 	font-size: 1.5em;
 	letter-spacing: 5px;
 	text-align:center;
-	width:400px;
+	width:100%;
+	height: 80px;
 	white-space: pre-wrap;
 	word-break: break-all;
 }
