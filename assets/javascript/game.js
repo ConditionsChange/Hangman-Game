@@ -4,8 +4,6 @@ window.onload = function() {
 };
 
 //initialize variables
-var keyFired = false;
-var keyDownArray = [];
 var playmusic = true;
 var sfx = document.getElementsByClassName("sfx")  //get the array of sound effects
 var guessesLeft;  //Number of guesses that the player has left to correctly display the word
@@ -32,13 +30,13 @@ document.onkeydown = function keyPress(event){
 			if (guessedLetters.indexOf(chosenLetter) === -1){ //if the chosen letter has not been guessed yet
 				guessedLetters.push(chosenLetter);// add guessed letter to guessed letter array
 				if (targetWord.includes(chosenLetter)){ //if guessed letter is in the target word
-					replaceBlanks(chosenLetter) //replace blanks with correctly guessed letter i.e. guessing "u" in "zulu" would show "_u_u" 
-					updateGFXSFXCorrect()  //update graphics and play sfx
+					replaceBlanks(chosenLetter); //replace blanks with correctly guessed letter i.e. guessing "u" in "zulu" would show "_u_u" 
+					updateGFXSFXCorrect();  //update graphics and play sfx
 				}
 				else{  
 					guessesLeft--; //subtract one guess
-					updateGFXSFXIncorrect() //update graphics and play sfx	
-				}
+					updateGFXSFXIncorrect(); //update graphics and play sfx	
+				};
 
 				//check win/loss conditions
 				if (blankSpaces === 0){// player wins
@@ -51,26 +49,21 @@ document.onkeydown = function keyPress(event){
 					gameState = false;
 					updateGFXSFXLose();
 				}
-				else{} //continue playing the game
+				else{}; //continue playing the game
 			}
 			else{  //if the chosen letter has already been guessed
-				playSFX("error")
-			}
+				playSFX("error");
+			};
 		}
 		else{ //invalid letter chosen
-			playSFX("error")
-		}
+			playSFX("error");
+		};
 	}
 	else{ //start a new game
-		initializeGame()
-	}
-}
+		initializeGame();
+	};
+};
 
-// document.onkeyup = function keyPress(event){
-// 	if (event.key === chosenLetter){
-// 		keyFired = false;		
-// 	}
-// }
 
 //----------------Functions-------------------//
 
@@ -107,10 +100,8 @@ function initializeGame(){
 	//handle sfx
 	document.getElementById("you-lose").pause();
 	document.getElementById("you-lose").currentTime = 0;
-	playSFX("start-game")
-	//start accepting keypresses
-	keyFired = false
-}
+	playSFX("start-game");
+};
 
 
 //function to play sound effext
@@ -118,7 +109,7 @@ function playSFX(elementId){
 	document.getElementById(elementId).pause();
 	document.getElementById(elementId).currentTime = 0;
 	document.getElementById(elementId).play();
-}
+};
 
 //function to replace dashes with correctly chosen letter
 function replaceBlanks(letter){
@@ -128,7 +119,7 @@ function replaceBlanks(letter){
 			blankSpaces--;
 		};
 	};
-}
+};
 
 
 function updateGFXSFXCorrect(){ 
@@ -136,7 +127,7 @@ function updateGFXSFXCorrect(){
 	document.getElementById("last-letter").innerHTML = chosenLetter;
 	document.getElementById("guessed-letters").innerHTML = guessedLetters;	
 	playSFX("correct")
-}
+};
 
 function updateGFXSFXIncorrect(){
 	if (guessesLeft > 0){
@@ -146,33 +137,33 @@ function updateGFXSFXIncorrect(){
 	document.getElementById("guesses-left").innerHTML = guessesLeft;
 	document.getElementById("last-letter").innerHTML = chosenLetter;
 	document.getElementById("guessed-letters").innerHTML = guessedLetters;		
-	playSFX("glass-break")
-}
+	playSFX("glass-break");
+};
 
 function updateGFXSFXWin(){
 	document.getElementById("wins-counter").innerHTML = wins;
 	document.getElementById("status").innerHTML = "You Win! Press any key to play again.";
-	playSFX("you-win")
-}
+	playSFX("you-win");
+};
 
 function updateGFXSFXLose(){
 	document.getElementById("rocketpic").style.filter = "grayscale(100%)";
 	document.getElementById("losses-counter").innerHTML = losses;
 	document.getElementById("status").innerHTML = 'You Lose! The word was "' + targetWord + '". Press any key to play again.';
-	playSFX("you-lose")
-}
+	playSFX("you-lose");
+};
 
 //toggle mute button
 document.getElementById("volume").onclick = function() {
 
 	if (playmusic === true){  //change image based on mute or unmute
-		document.getElementById("volume").src="./assets/images/muted.png"
+		document.getElementById("volume").src="./assets/images/muted.png";
 	}
 	else{
-		document.getElementById("volume").src="./assets/images/unmuted.png"	
+		document.getElementById("volume").src="./assets/images/unmuted.png"	;
 	}
 	playmusic = !playmusic
 	for (var i=0; i < sfx.length ; i++){
-		sfx[i].muted = !sfx[i].muted  //toggle mute
+		sfx[i].muted = !sfx[i].muted;  //toggle mute
 	}
 };
