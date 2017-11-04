@@ -28,7 +28,7 @@ document.onkeydown = function keyPress(event){
 
 	if (gameState){
 		chosenLetter = event.key;
-		if (/[a-z]/.test(chosenLetter)){  //check if the input is a valid key (lower case letter and not a symbol)
+		if (/^[a-z]$/.test(chosenLetter)){  //check if the input is a valid key (lower case letter and not a symbol)
 			if (guessedLetters.indexOf(chosenLetter) === -1){ //if the chosen letter has not been guessed yet
 				guessedLetters.push(chosenLetter);// add guessed letter to guessed letter array
 				if (targetWord.includes(chosenLetter)){ //if guessed letter is in the target word
