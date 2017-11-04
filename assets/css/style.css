@@ -153,8 +153,8 @@ h1{
 	text-align:center;
 	border: 2px solid white;
 	margin: 0;
-	padding: 0;
-	width: 380px;
+	padding: 0 20px;
+	width: 340px;
 	height:125px;
 	font-size: 1.2em;
 	border-radius: 15px;

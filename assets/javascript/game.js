@@ -1,182 +1,178 @@
+//play background music on load
 window.onload = function() {
-	//play background music on load
-	document.getElementById("bgloop").play();      
-	
-};
-
-var playmusic = true;
-var sfx = document.getElementsByClassName("sfx")
-
-document.getElementById("volume").onclick = function() {
-
-	if (playmusic === true){ //make it false and mute the music
-		playmusic = false;
-		document.getElementById("volume").src="./assets/images/muted.png";
-		var sfx = document.getElementsByClassName("sfx")
-		for (var i=0; i < sfx.length ; i++){
-			sfx[i].muted = true
-		}	
-	}
-	else{ //make it true and mute the music
-		playmusic = true;
-		document.getElementById("volume").src="./assets/images/unmuted.png";
-		var sfx = document.getElementsByClassName("sfx")
-		for (var i=0; i < sfx.length ; i++){
-			sfx[i].muted = false
-		}		
-	}
-
+	document.getElementById("bgloop").play();   
 };
 
 //initialize variables
-var guesses_left;  //Number of guesses that the player has left to correctly display the word
-var word_bank =["asteroid","astronaut","big bang theory","alien","aurora borealis","black hole","comet","cosmology","dwarf planet","eclipse","extraterrestrial","horizon","galaxy","gravity","jupiter","lunar","mars","meteor","milky way","moon", "nasa","nebula","nova","orbit","penumbra","planet","pulsar","quasar","rocket","satellite","shuttle","sun","supernova","solar system","terraform","uranus","venus","mercury","earth","neptune","saturn","cosmos","radiation","space station","universe","the big dipper","star","constellation","umbra","zenith","aphelion","apogee","caldera","cosmic ray","crater","dark matter","gamma ray","heliosphere","parallax","red giant","solar flare","solstice","white dwarf"]; //an array of words that are used to play the game
-var guessed_letters; //an array of previously guessed letters
-var target_word; //the word the player is trying to guess
-var target_word_array; //the target word in an array
-var chosen_letter; //the letter the player guessed
-var wins = 0;
-var losses = 0;
-var blank_spaces; // the number of blank spaces to show
-var blank_array; //the array shown to player, initialized with dashes
-var gamestate = "page load"; //3 states: page load, play game, results screen
-var spaceship_opacity; //lower the opacity of the spaceship image every time the player guesses wrong
-var spaceship_grayscale; //when the player loses change change the spaceship image to black and white
-var alphabet = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+var keyFired = false;
+var keyDownArray = [];
+var playmusic = true;
+var sfx = document.getElementsByClassName("sfx")  //get the array of sound effects
+var guessesLeft;  //Number of guesses that the player has left to correctly display the word
+var wordBank =["asteroid","astronaut","big bang theory","alien","aurora borealis","black hole","comet","cosmology","dwarf planet","eclipse","extraterrestrial","horizon","galaxy","gravity","jupiter","lunar","mars","meteor","milky way","moon", "nasa","nebula","nova","orbit","penumbra","planet","pulsar","quasar","rocket","satellite","shuttle","sun","supernova","solar system","terraform","uranus","venus","mercury","earth","neptune","saturn","cosmos","radiation","space station","universe","the big dipper","star","constellation","umbra","zenith","aphelion","apogee","caldera","cosmic ray","crater","dark matter","gamma ray","heliosphere","parallax","red giant","solar flare","solstice","white dwarf"]; //an array of words that are used to play the game
+var guessedLetters; //an array of previously guessed letters
+var targetWord; //the word the player is trying to guess
+var targetWordArray; //the target word in an array
+var chosenLetter; //the letter the player guessed
+var wins = 0; //number of wins
+var losses = 0; //number of loses
+var blankSpaces; // the number of blank spaces to show
+var blankArray; //the array shown to player, initialized with dashes
+var gameState = false; //true means an active game is being played. false means a game has just ended
+var spaceshipOpacity; //lower the opacity of the spaceship image every time the player guesses wrong
+var spaceshipGrayscale; //when the player loses change change the spaceship image to black and white
 
 
+//cycle game logic on an onkeydown event
+document.onkeydown = function keyPress(event){
 
+	if (gameState){
+		chosenLetter = event.key;
+		if (/[a-z]/.test(chosenLetter)){  //check if the input is a valid key (lower case letter and not a symbol)
+			if (guessedLetters.indexOf(chosenLetter) === -1){ //if the chosen letter has not been guessed yet
+				guessedLetters.push(chosenLetter);// add guessed letter to guessed letter array
+				if (targetWord.includes(chosenLetter)){ //if guessed letter is in the target word
+					replaceBlanks(chosenLetter) //replace blanks with correctly guessed letter i.e. guessing "u" in "zulu" would show "_u_u" 
+					updateGFXSFXCorrect()  //update graphics and play sfx
+				}
+				else{  
+					guessesLeft--; //subtract one guess
+					updateGFXSFXIncorrect() //update graphics and play sfx	
+				}
 
-
-//after every key pressed run code based on what the game state is
-document.onkeyup = function keyPress(event){
-	
-	
-	console.log("A key was just pressed");
-	
-	if (gamestate === "page load"){
-		initialize_game();
-	}
-	
-	else if (gamestate === "play game"){
-		chosen_letter = event.key;	//get user keystroke
-		
-		if ((guessed_letters.indexOf(chosen_letter)) === -1 && (alphabet.indexOf(chosen_letter)>-1 )){ //if the chosen letter is not in the guessed letter pool and is a valid key
-			if (target_word.includes(chosen_letter)){ //if guessed letter is in the target word
-				console.log("correct letter guess");
-				guessed_letters.push(chosen_letter);// add guessed letter to guessed letter array
-				//replace blanks with correctly guessed letter
-				var indices = [];
-				for (var i=0;i<target_word_array.length;i++){
-					if (target_word_array[i] === chosen_letter){
-						blank_array[i] = chosen_letter;
-						blank_spaces--;
-					};
-				};
-				//update graphics
-				document.getElementById("target-word").innerHTML = blank_array.join("");
-				document.getElementById("last-letter").innerHTML = event.key;
-				document.getElementById("guessed-letters").innerHTML = guessed_letters;	
-				//play sfx
-				document.getElementById("correct").pause();
-				document.getElementById("correct").currentTime = 0;
-				document.getElementById("correct").play();
+				//check win/loss conditions
+				if (blankSpaces === 0){// player wins
+					wins++;  //increment the win counter
+					gameState = false;
+					updateGFXSFXWin();
+				}
+				else if (guessesLeft <= 0){ //player loses
+					losses++;  //increment the loss counter
+					gameState = false;
+					updateGFXSFXLose();
+				}
+				else{} //continue playing the game
 			}
-			else{ ///if the guessed letter is not in the target word
-				console.log("incorrect letter guess");
-				guessed_letters.push(chosen_letter); // add guessed letter to guessed letter array
-				guesses_left--;//subtract one guess chance
-				if (guesses_left > 0){
-					spaceship_opacity -= .12;//lower spaceship opacity
-				};
-				//update graphics
-				document.getElementById("rocketpic").style.opacity = spaceship_opacity;
-				document.getElementById("guesses-left").innerHTML = guesses_left;
-				document.getElementById("last-letter").innerHTML = event.key;
-				document.getElementById("guessed-letters").innerHTML = guessed_letters;		
-				//play sfx
-				document.getElementById("glass-break").pause();
-				document.getElementById("glass-break").currentTime = 0;
-				document.getElementById("glass-break").play();					
-			};
-			
-			//check win-loss conditions
-			if (blank_spaces === 0){//you win
-				console.log("player wins");
-				wins++;//increment the win counter
-				gamestate = "results screen";
-				//update graphics
-				document.getElementById("wins-counter").innerHTML = wins;
-				document.getElementById("status").innerHTML = "You Win! Press any key to play again.";
-				// play sfx
-				document.getElementById("you-win").play();								
+			else{  //if the chosen letter has already been guessed
+				playSFX("error")
 			}
-			else if (guesses_left <= 0){ //you lose
-				console.log("player loses");
-				losses++;//increment the loss counter
-				gamestate = "results screen";
-				//update graphics
-				document.getElementById("rocketpic").style.filter = "grayscale(100%)";
-				document.getElementById("losses-counter").innerHTML = losses;
-				document.getElementById("status").innerHTML = 'You Lose! The word was "' + target_word + '". Press any key to play again.';
-				//play sfx
-				document.getElementById("you-lose").play();
-			}
-			else{
-			};
 		}
-		else{
-			console.log("letter already previously chosen or key pressed was not a letter");
-			//play sfx
-			document.getElementById("error").pause();
-			document.getElementById("error").currentTime = 0;
-    		document.getElementById("error").play();
-		};
-		
+		else{ //invalid letter chosen
+			playSFX("error")
+		}
 	}
-	else if (gamestate === "results screen")
-	{
-		initialize_game();	
+	else{ //start a new game
+		initializeGame()
 	}
-	else{	
+}
+
+// document.onkeyup = function keyPress(event){
+// 	if (event.key === chosenLetter){
+// 		keyFired = false;		
+// 	}
+// }
+
+//----------------Functions-------------------//
+
+
+function initializeGame(){
+	//reset variables when the game starts
+	guessesLeft = 6;
+	guessedLetters = [];
+	blankSpaces = 0;
+
+	//select a new target word
+	ran_num = Math.floor(Math.random() * wordBank.length); //select a random number from 0 to wordBank.length-1
+	targetWord = wordBank[ran_num];	//assign a letter from the wordBank to the target word
+	targetWordArray = targetWord.split(""); //split the target word by letter
+	blankArray = targetWordArray.slice(); //create a new array with the same contents
+	for (var i=0; i<targetWordArray.length ;i++){ //fill in the blank array with dashes i.e. ["i"," ","a","m"] becomes ["-"," ","-","-"]
+		if (targetWordArray[i] !== " "){
+			blankArray[i]="-";
+			blankSpaces++;
+		}
 	};
+	gameState = true; //change game state to play game
 	
-	console.log("gamestate =  " + gamestate)//console log gamestate after every key press
-};
-function initialize_game(){
-//reset variables when the game starts
-guesses_left =6;
-guessed_letters = [];
-blank_spaces =0;
-spaceship_opacity = 1;
-spaceship_grayscale=100;
-//select a new target word
-ran_num = Math.floor(Math.random() * word_bank.length); //select a random number from 0 to word_bank.length-1
-target_word = word_bank[ran_num];	//assign a letter from the word_bank to the target word
-target_word_array = target_word.split(""); //split the target word by letter
-blank_array = target_word_array.slice(); //create a new array with the same contents
-for (var i=0;i<target_word_array.length;i++){ //fill in the blank array with dashes
-	if (target_word_array[i] === " "){
-	blank_array[i]=" ";	
+	//update graphics
+	spaceshipOpacity = 1;
+	spaceshipGrayscale = 100;
+	document.getElementById("guesses-left").innerHTML = guessesLeft;
+	document.getElementById("target-word").innerHTML = blankArray.join("");
+	document.getElementById("status").innerHTML = "";	
+	document.getElementById("last-letter").innerHTML = "";
+	document.getElementById("guessed-letters").innerHTML = "";
+	document.getElementById("rocketpic").style.opacity = "1";
+	document.getElementById("rocketpic").style.filter = "grayscale(0%)";
+	//handle sfx
+	document.getElementById("you-lose").pause();
+	document.getElementById("you-lose").currentTime = 0;
+	playSFX("start-game")
+	//start accepting keypresses
+	keyFired = false
+}
+
+
+//function to play sound effext
+function playSFX(elementId){
+	document.getElementById(elementId).pause();
+	document.getElementById(elementId).currentTime = 0;
+	document.getElementById(elementId).play();
+}
+
+//function to replace dashes with correctly chosen letter
+function replaceBlanks(letter){
+	for (var i=0; i<targetWordArray.length ;i++){
+		if (targetWordArray[i] === letter){
+			blankArray[i] = letter;
+			blankSpaces--;
+		};
+	};
+}
+
+
+function updateGFXSFXCorrect(){ 
+	document.getElementById("target-word").innerHTML = blankArray.join("");
+	document.getElementById("last-letter").innerHTML = chosenLetter;
+	document.getElementById("guessed-letters").innerHTML = guessedLetters;	
+	playSFX("correct")
+}
+
+function updateGFXSFXIncorrect(){
+	if (guessesLeft > 0){
+		spaceshipOpacity -= .12;	//lower the spaceship's opacity
+	};
+	document.getElementById("rocketpic").style.opacity = spaceshipOpacity;
+	document.getElementById("guesses-left").innerHTML = guessesLeft;
+	document.getElementById("last-letter").innerHTML = chosenLetter;
+	document.getElementById("guessed-letters").innerHTML = guessedLetters;		
+	playSFX("glass-break")
+}
+
+function updateGFXSFXWin(){
+	document.getElementById("wins-counter").innerHTML = wins;
+	document.getElementById("status").innerHTML = "You Win! Press any key to play again.";
+	playSFX("you-win")
+}
+
+function updateGFXSFXLose(){
+	document.getElementById("rocketpic").style.filter = "grayscale(100%)";
+	document.getElementById("losses-counter").innerHTML = losses;
+	document.getElementById("status").innerHTML = 'You Lose! The word was "' + targetWord + '". Press any key to play again.';
+	playSFX("you-lose")
+}
+
+//toggle mute button
+document.getElementById("volume").onclick = function() {
+
+	if (playmusic === true){  //change image based on mute or unmute
+		document.getElementById("volume").src="./assets/images/muted.png"
 	}
 	else{
-	blank_array[i]="-";
-	blank_spaces++;
-	};
+		document.getElementById("volume").src="./assets/images/unmuted.png"	
+	}
+	playmusic = !playmusic
+	for (var i=0; i < sfx.length ; i++){
+		sfx[i].muted = !sfx[i].muted  //toggle mute
+	}
 };
-gamestate = "play game"; //change game state to play game
-
-//update graphics
-document.getElementById("guesses-left").innerHTML = guesses_left;//change guesses left to 6
-document.getElementById("target-word").innerHTML = blank_array.join(""); //change the target words to blanks
-document.getElementById("status").innerHTML = "";	
-document.getElementById("last-letter").innerHTML = "";
-document.getElementById("guessed-letters").innerHTML = "";//change guesses left to 6
-document.getElementById("rocketpic").style.opacity = "1";
-document.getElementById("rocketpic").style.filter = "grayscale(0%)";
-//stop all music
-document.getElementById("you-lose").pause();
-document.getElementById("you-lose").currentTime = 0;
-//then play sfx
-document.getElementById("start-game").play();
-}
