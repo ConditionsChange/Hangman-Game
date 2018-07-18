@@ -1,7 +1,38 @@
-//play background music on load
-window.onload = function() {
-	document.getElementById("bgloop").play();   
-};
+//inject game into the empty div
+document.getElementById("hangman-game").innerHTML = '<div class="wrapper">\
+<h1>Welcome to Hangman: <span id="space-edition">Space Edition</span></h1>\
+<div id="stats">\
+	<h2 class="first-row" id="guesses-left-title" >Guesses Left: <span id="guesses-left">0</span></h2>\
+	<h2 class="first-row" id="wins">Wins: <span id="wins-counter">0</span></h2>\
+	<h2 class="first-row" id="losses">Losses: <span id="losses-counter">0</span></h2>\
+	<div id="volume-container"><img id="volume" src="./assets/images/unmuted.png"/></div>\
+	</div>\
+<div class="game-space">\
+	<img id="rocketpic" src="assets/images/space-ship.jpg" alt="Rocket Pic"/>\
+	<div class="guessed-word-container">\
+		<span id="target-word">Press Any Key to Start</span>\
+		<span id="status"></span>\
+	</div>\
+</div>\
+<div class="letter-history">\
+	<div class="last-guess-container">\
+		<p class="help-text">Last Guess</p>\
+		<span id="last-letter"></span>\
+	</div>\
+	<div class="guessed-letters-container">\
+		<p class="help-text">Guessed Letters:</p>\
+		<span id="guessed-letters"></span>\
+	</div>\
+</div>\
+</div>\
+<audio class="sfx" id="bgloop" src="assets/music/straight.mp3" loop="loop"></audio>\
+<audio class="sfx" id="correct" src="assets/music/correct.mp3"></audio>\
+<audio class="sfx" id="you-win" src="assets/music/you_win.mp3"></audio>\
+<audio class="sfx" id="you-lose" src="assets/music/you_lose.mp3" loop="loop"></audio>\
+<audio class="sfx" id="error" src="assets/music/error.mp3"></audio>\
+<audio class="sfx" id="start-game" src="assets/music/start_game.mp3"></audio>\
+<audio class="sfx" id="glass-break" src="assets/music/glass_break.mp3"></audio>';
+
 
 //initialize variables
 var playmusic = true;
@@ -166,4 +197,13 @@ document.getElementById("volume").onclick = function() {
 	for (var i=0; i < sfx.length ; i++){
 		sfx[i].muted = !sfx[i].muted;  //toggle mute
 	}
+};
+
+
+
+
+
+//play background music on load
+window.onload = function() {
+	document.getElementById("bgloop").play();   
 };
