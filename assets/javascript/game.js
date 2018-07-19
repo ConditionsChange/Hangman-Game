@@ -182,6 +182,7 @@ var hangmanGame = {
 
 //cycle game logic on an onkeydown event
 document.onkeydown = function(event){
+	pageload();
 	hangmanGame.onKeyPress(event);
 }
 
@@ -202,7 +203,11 @@ document.getElementById("volume").onclick = function() {
 };
 
 
-//play background music on load
-window.onload = function() {
-	document.getElementById("bgloop").play();   
-};
+//get around chrome's music autoplay policy
+var isPageLoaded = false;
+function pageload(){
+	if (isPageLoaded === false){
+		isPageLoaded = true;
+		document.getElementById("bgloop").play();   
+	}
+}
